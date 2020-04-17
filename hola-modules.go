@@ -12,14 +12,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main () {
+func setupRouter() *gin.Engine {
 	r := gin.Default()
+
 	r.GET("/ping", func (c *gin.Context) {
 		c.JSON(200, gin.H {
 			"message": "pong",
 		})
 	})
-
 	r.GET("/", func(c *gin.Context) {
 		name := c.Query("name")
 		if name == "" {
@@ -28,15 +28,22 @@ func main () {
 		log.Printf("Received request for %s\n", name)
 		c.String(http.StatusOK, "Hello, %s\n", name)
 	})
-
 	r.GET("/health", func(c *gin.Context) {
 		c.String(http.StatusOK, "")
 	})
-
 	r.GET("/readiness", func(c *gin.Context) {
 		c.String(http.StatusOK, "")
 	})
+	r.GET("/env/:env", func(c *gin.Context) {
+		env := os.Getenv(c.Param("env"))
+		c.String(http.StatusOK, env)
+	})
+	return r
+}
 
+func main () {
+
+	r := setupRouter()
 	srv := &http.Server{
 		Handler:      r,
 		Addr:         ":8080",
