@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,8 +16,8 @@ import (
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/ping", func (c *gin.Context) {
-		c.JSON(200, gin.H {
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
@@ -41,12 +42,14 @@ func setupRouter() *gin.Engine {
 	return r
 }
 
-func main () {
+func main() {
 
 	r := setupRouter()
+	port := os.Getenv("PORT")
+	fmt.Printf("Got a PORT to use: " + port)
 	srv := &http.Server{
 		Handler:      r,
-		Addr:         ":8080",
+		Addr:         port,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
@@ -54,7 +57,7 @@ func main () {
 	// Start Server
 	go func() {
 		log.Println("Starting Server")
-		if err := r.Run(); err != nil {
+		if err := r.Run("127.0.0.1:" + port); err != nil {
 			log.Fatal(err)
 		}
 	}()

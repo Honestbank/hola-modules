@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hola-modules-load-balancer
+  name: hola-modules-cluster-ip
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
-    app: nginx
+    app: hola-modules
   ports:
     - protocol: TCP
       port: 80

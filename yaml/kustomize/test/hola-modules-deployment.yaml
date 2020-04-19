@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment # Type of Kubernetes resource
+metadata:
+  name: hola-modules # Name of the Kubernetes resource
+spec:
+  replicas: 3 # Number of pods to run at any given time
+  selector:
+    matchLabels:
+      app: hola-modules # This deployment applies to any Pods matching the specified label
+  template: # This deployment will create a set of pods using the configurations in this template
+    metadata:
+      labels: # The labels that will be applied to all of the pods in this deployment
+        app: hola-modules
+    spec: # Spec for the container which will run in the Pod
+      containers:
+        - name: hola-modules
+          image: 840278898628.dkr.ecr.ap-southeast-1.amazonaws.com/test-aws-sin-registry-01:v0.31
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: PORT
+              value: 1234
+          ports:
+            - containerPort: 1234 # Should match the port number that the Go application listens on
+          livenessProbe: # To check the health of the Pod
+            httpGet:
+              path: /health
+              port: 1234
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+          readinessProbe: # To check if the Pod is ready to serve traffic or not
+            httpGet:
+              path: /readiness
+              port: 1234
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+---
+apiVersion: v1
+kind: Service # Type of kubernetes resource
+metadata:
+  name: hola-modules-service # Name of the resource
+spec:
+  type: NodePort # A port is opened on each node in your cluster via Kube proxy.
+  ports: # Take incoming HTTP requests on port 9090 and forward them to the targetPort of 8080
+    - name: http
+      port: 9090
+      targetPort: 1234
+  selector:
+    app: hola-modules # Map any pod with label `app=go-hello-world` to this service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hola-modules-load-balancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: hola-modules
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 1234

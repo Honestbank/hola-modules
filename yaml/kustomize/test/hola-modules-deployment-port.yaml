@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hola-modules
+spec:
+  template:
+    spec:
+      containers:
+        - name: hola-modules
+          env:
+            - name: PORT
+              value: "5555"
+          ports:
+            - containerPort: 5555
+            - containerPort: 1234
+              $patch: delete
+          livenessProbe:
+            httpGet:
+              port: 5555
+          readinessProbe:
+            httpGet:
+              port: 5555

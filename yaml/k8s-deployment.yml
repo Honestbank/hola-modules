@@ -15,14 +15,19 @@ spec:
     spec:                        # Spec for the container which will run in the Pod
       containers:
         - name: hola-modules
-          image: 840278898628.dkr.ecr.ap-southeast-1.amazonaws.com/test-aws-sin-registry-01:v0.1.1
+          image: 840278898628.dkr.ecr.ap-southeast-1.amazonaws.com/test-aws-sin-registry-01:v0.31
           imagePullPolicy: IfNotPresent
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: PORT
+              value: 1234
           ports:
-            - containerPort: 8080  # Should match the port number that the Go application listens on
+            - containerPort: $PORT  # Should match the port number that the Go application listens on
           livenessProbe:           # To check the health of the Pod
             httpGet:
               path: /health
-              port: 8080
+              port: 1234
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 15
@@ -30,7 +35,7 @@ spec:
           readinessProbe:          # To check if the Pod is ready to serve traffic or not
             httpGet:
               path: /readiness
-              port: 8080
+              port: 1234
               scheme: HTTP
             initialDelaySeconds: 5
             timeoutSeconds: 1
@@ -44,6 +49,6 @@ spec:
   ports:                         # Take incoming HTTP requests on port 9090 and forward them to the targetPort of 8080
     - name: http
       port: 9090
-      targetPort: 8080
+      targetPort: 1234
   selector:
     app: hola-modules         # Map any pod with label `app=go-hello-world` to this service
