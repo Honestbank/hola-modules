@@ -12,22 +12,6 @@
 #   selector:
 #     app: hola-modules # Map any pod with label `app=go-hello-world` to this service
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: hola-modules
-  labels:
-    app: hola-modules
-spec:
-  type: ClusterIP
-  selector:
-    app: hola-modules
-  ports:
-    - name: hola-modules-http
-      protocol: TCP
-      port: 1234
-      targetPort: http
----
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -38,7 +22,7 @@ spec:
   servers:
     - port:
         number: 1234
-        name: hola-modules-http
+        name: http
         protocol: HTTP
       hosts:
         - "*"
@@ -55,7 +39,8 @@ spec:
   http:
     - route:
         - destination:
-            host: hola-modules
+            host: hola-modules # Name of Service object
+            subset: v5 # Required if you're using versions!
             port:
               number: 1234
 ---
@@ -69,3 +54,19 @@ spec:
     - name: v5
       labels:
         version: v5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hola-modules
+  labels:
+    app: hola-modules
+spec:
+  type: ClusterIP
+  selector:
+    app: hola-modules
+  ports:
+    - name: http
+      port: 1234
+      protocol: TCP
+      targetPort: 80

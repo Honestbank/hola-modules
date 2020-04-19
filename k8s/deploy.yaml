@@ -20,7 +20,7 @@ spec:
     spec: # Spec for the container which will run in the Pod
       containers:
         - name: hola-modules
-          image: 033245014990.dkr.ecr.us-west-2.amazonaws.com/hola-modules:v0.5
+          image: 033245014990.dkr.ecr.us-west-2.amazonaws.com/hola-modules:v5
           imagePullPolicy: IfNotPresent
           env:
             - name: LOG_LEVEL
