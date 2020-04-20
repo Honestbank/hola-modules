@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  annotations:
+    fluxcd.io/sync-checksum: 3e820dfa425cb390750466421165e0188f150121
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.istio.io/v1alpha3","kind":"DestinationRule","metadata":{"annotations":{"fluxcd.io/sync-checksum":"3e820dfa425cb390750466421165e0188f150121"},"labels":{"fluxcd.io/sync-gc-mark":"sha256.eTdaB3rL5oNZmzZXTNSNOGTqKY2s6S8CiMXHGfAAXCM"},"name":"podinfo","namespace":"default"},"spec":{"host":"podinfo"}}
+  creationTimestamp: "2020-04-18T18:56:20Z"
+  generation: 1
+  labels:
+    fluxcd.io/sync-gc-mark: sha256.eTdaB3rL5oNZmzZXTNSNOGTqKY2s6S8CiMXHGfAAXCM
+  name: podinfo
+  namespace: default
+  resourceVersion: "204532"
+  selfLink: /apis/networking.istio.io/v1beta1/namespaces/default/destinationrules/podinfo
+  uid: 58c794ca-7902-4592-905c-25b0eec339a5
+spec:
+  namespace: demo
+  host: podinfo

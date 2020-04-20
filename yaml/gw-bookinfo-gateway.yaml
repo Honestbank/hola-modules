@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.istio.io/v1alpha3","kind":"Gateway","metadata":{"annotations":{},"name":"bookinfo-gateway","namespace":"default"},"spec":{"selector":{"istio":"ingressgateway"},"servers":[{"hosts":["*"],"port":{"name":"http","number":80,"protocol":"HTTP"}}]}}
+  creationTimestamp: "2020-04-18T11:47:09Z"
+  generation: 1
+  name: bookinfo-gateway
+  namespace: default
+  resourceVersion: "157604"
+  selfLink: /apis/networking.istio.io/v1beta1/namespaces/default/gateways/bookinfo-gateway
+  uid: 93133ec3-7fb4-4713-8d22-bd87897d3e66
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - hosts:
+        - "bookinfo.test.honestbank.com"
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
