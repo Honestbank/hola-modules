@@ -17,6 +17,8 @@ COPY . .
 EXPOSE 8080
 
 # Run the executable
+# Need to have option `CGO_ENABLED=0` and `-installsuffix cgo` because `alpine` need these tags in order for it to run
+# If not provided the excution will say `standard_init_linux.go:211: exec user process caused "no such file or directory"`
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o hola-modules .
 
 ######## Start a new stage from scratch #######
